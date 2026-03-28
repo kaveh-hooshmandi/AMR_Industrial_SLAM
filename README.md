@@ -106,7 +106,12 @@ In this demonstration:
 SLAM is performed using **graph-based optimization (RTAB-Map)** to generate a 2D map.
 
 ---
+## Demo
+![amr_rtab_gif_2](https://github.com/user-attachments/assets/d0d5b713-1a9e-42c4-9ad8-94e54d0f8753)
 
+* In this demo, I have used only the **front LiDAR** (not both). I have also used the **front stereo camera**. Here, I'm performing **VIO** and **ICP odometry**, as well as **visual** and **laser** **loop closures** to create a **2D map**. Additionally, RTAB-Map uses **graph-based SLAM**.
+
+---
 ## ⚙️ Installation and Usage
 
 This project requires **ROS 2 (Recommended: ROS 2 Humble)**.
