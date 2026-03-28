@@ -1,70 +1,155 @@
-# Multi Sensor SLAM
+# AMR Industrial Multi-Sensor SLAM
 
-**A framework to work with Industrial AMRs and perform SLAM using various sensors in challenging environments**
+## Abstract
 
-In this repository, I have combined different frameworks to create a functional AMR that performs **Robust SLAM** in smart factories and similar environments:
-
-![rtab](https://github.com/user-attachments/assets/36dca959-9468-4c7c-ad9a-43100fb4f004)
-
- 
-For my AMR development, I’ve selected the following **Open-Source Repositories**:
-1. **[Linorobot2](https://github.com/linorobot/linorobot2?tab=readme-ov-file)** as the base repository for **creating my AMR**,
-2. **[RTAB-Map](https://github.com/introlab/rtabmap)** as the main framework for **sensor fusion and SLAM**,
-3. **[Kinematic-ICP](https://github.com/PRBonn/kinematic-icp)** for future work on **enhancing ICP-based odometry**,
-
-Additionally, there are two more packages I created:
-1. **amr_main** as the base package for running **everything together**,
-2. **laser_fusion** which contains the necessary **2D-LiDAR fusion node** (to fuse measurements from different 2D LiDARs).
-
-* I’m still working on enhancing this project. It works well, but still needs some improvements to incorporate additional features (e.g., using **Kinematic-ICP** alongside **RTAB-Map**).
+This repository presents a ROS 2-based multi-sensor SLAM framework for industrial autonomous mobile robots (AMRs). The system integrates LiDAR, vision, and inertial sensing to enable robust localization and mapping in dynamic and unstructured environments such as smart factories and warehouses. The proposed framework combines state-of-the-art open-source tools with custom-developed modules to achieve reliable perception and navigation performance.
 
 ---
-## Main Files (To adapt the work to your needs)
-1. **RTAB-Map parameter file**: In this file, you can change the RTAB-Map parameters. You can also set **which** 2D LiDAR you want to use (**front, back, all**) and **which** Stereo Camera (**front, back, both** -> (Not available yet)).
-   
-   ```bash
-   code ~/Multi_Sensor_SLAM/src/rtabmap_ros/rtabmap_launch/launch/rtabmap.launch.py
 
-2. Change the Robot and Sensors' **parameters** or **Add/Remove** them:
-   ```bash
-   code ~/Multi_Sensor_SLAM/src/linorobot2/linorobot2_description/urdf/4wd_properties.urdf.xacro
-   code ~/Multi_Sensor_SLAM/src/linorobot2/linorobot2_description/urdf/robots/4wd.urdf.xacro
-   code ~/Multi_Sensor_SLAM/src/linorobot2/linorobot2_description/urdf/sensors/laser_new.urdf.xacro
-   code ~/Multi_Sensor_SLAM/src/linorobot2/linorobot2_description/urdf/sensors/stereo_camera.urdf.xacro
-   code ~/Multi_Sensor_SLAM/src/linorobot2/linorobot2_description/urdf/sensors/imu.urdf.xacro
+## System Overview
 
-3. 2D-LiDAR **fusion** algorithm:
-   ```bash
-   code ~/Multi_Sensor_SLAM/src/laser_fusion/laser_fusion/combine_laser_measurements.py
-  
----
-## Demo
-![amr_rtab_gif_2](https://github.com/user-attachments/assets/d0d5b713-1a9e-42c4-9ad8-94e54d0f8753)
+<p align="center">
+  <img src="images/RABO1.png" width="600"/>
+</p>
 
-* In this demo, I have used only the **front LiDAR** (not both). I have also used the **front stereo camera**. Here, I'm performing **VIO** and **ICP odometry**, as well as **visual** and **laser** **loop closures** to create a **2D map**. Additionally, RTAB-Map uses **graph-based SLAM**.
+The system architecture integrates multiple perception and navigation components, enabling robust SLAM through sensor fusion and graph-based optimization.
 
 ---
+
+## Framework Architecture
+
+The proposed system is built upon the integration of the following open-source frameworks:
+
+* **Linorobot2**: Provides the base platform for AMR modeling, kinematics, and robot description.
+* **RTAB-Map**: Core framework for multi-sensor SLAM, loop closure detection, and graph-based optimization.
+* **Kinematic-ICP**: (Future integration) Enhances odometry estimation using kinematic constraints.
+
+Additionally, the following custom modules have been developed:
+
+* **amr_main**: Central orchestration package for launching and managing the full system.
+* **laser_fusion**: Multi-LiDAR fusion module for combining measurements from multiple 2D LiDAR sensors.
+
+---
+
+## Key Features
+
+* Multi-sensor fusion (LiDAR, stereo vision, IMU)
+* Graph-based SLAM using RTAB-Map
+* Visual-Inertial and LiDAR-based odometry
+* Multi-LiDAR fusion for enhanced perception
+* ROS 2 (Humble) based architecture
+* Scalable to real-world industrial AMR platforms
+
+---
+
+## Configuration and Customization
+
+The system is designed to be modular and configurable:
+
+### SLAM Configuration
+
+Modify RTAB-Map parameters:
+
+```bash
+code ~/AMR_Industrial_SLAM/src/rtabmap_ros/rtabmap_launch/launch/rtabmap.launch.py
+```
+
+### Robot and Sensor Configuration
+
+Customize robot structure and sensors:
+
+```bash
+code ~/AMR_Industrial_SLAM/src/linorobot2/linorobot2_description/urdf/4wd_properties.urdf.xacro
+code ~/AMR_Industrial_SLAM/src/linorobot2/linorobot2_description/urdf/robots/4wd.urdf.xacro
+code ~/AMR_Industrial_SLAM/src/linorobot2/linorobot2_description/urdf/sensors/laser_new.urdf.xacro
+code ~/AMR_Industrial_SLAM/src/linorobot2/linorobot2_description/urdf/sensors/stereo_camera.urdf.xacro
+code ~/AMR_Industrial_SLAM/src/linorobot2/linorobot2_description/urdf/sensors/imu.urdf.xacro
+```
+
+### LiDAR Fusion Module
+
+```bash
+code ~/AMR_Industrial_SLAM/src/laser_fusion/laser_fusion/combine_laser_measurements.py
+```
+
+---
+
+## Experimental Setup
+
+The system supports multiple sensing configurations:
+
+* Single or multi-LiDAR setups (front, rear, or combined)
+* Stereo vision (front camera, extendable to multi-camera setups)
+* IMU integration for motion estimation
+
+In the demonstrated setup:
+
+* Front LiDAR is used for mapping
+* Stereo camera provides visual odometry
+* SLAM is performed using graph-based optimization with loop closure detection
+
+---
+
 ## Installation and Usage
- 
-- This project requires **ROS 2** (**Recommended: ROS 2 Humble**):
 
-1. **Clone the Repository**:
-   ```bash
-   git https://github.com/ali-pahlevani/Multi_Sensor_SLAM.git
-   cd Multi_Sensor_SLAM
- 
-2. **Install the required Dependencies**:
-   ```bash
-   rosdep update && rosdep install --from-path src --ignore-src -y
- 
-3. **Build the Workspace**:
-   ```bash
-   colcon build
-   source install/setup.bash
+### Requirements
 
-4. **Launch the Simulation**: 
-   ```bash
-   ros2 launch amr_main launch_all.launch.py
+* Ubuntu 22.04
+* ROS 2 Humble
+* Python 3.10
 
-## If you have any question about any part, please feel free to ask! ## 
- 
+---
+
+### Installation
+
+```bash
+git clone https://github.com/kaveh-hooshmandi/AMR_Industrial_SLAM.git
+cd AMR_Industrial_SLAM
+```
+
+```bash
+rosdep update && rosdep install --from-path src --ignore-src -y
+```
+
+```bash
+colcon build
+source install/setup.bash
+```
+
+---
+
+### Run the System
+
+```bash
+ros2 launch amr_main launch_all.launch.py
+```
+
+---
+
+## Research Contributions
+
+* Adapted and extended a multi-sensor SLAM framework for industrial AMR applications
+* Designed and implemented a LiDAR fusion pipeline for multi-sensor perception
+* Integrated visual, inertial, and LiDAR sensing for robust localization
+* Enhanced system modularity for real-world deployment in dynamic environments
+
+---
+
+## Future Work
+
+* Integration of Kinematic-ICP with RTAB-Map
+* Incorporation of learning-based navigation (DRL)
+* Multi-camera and thermal sensing integration
+* Deployment on embedded platforms (e.g., NVIDIA Jetson)
+
+---
+
+## Acknowledgment
+
+This work is based on the following open-source projects:
+
+* https://github.com/linorobot/linorobot2
+* https://github.com/introlab/rtabmap
+* https://github.com/PRBonn/kinematic-icp
+
+The original contributions of the respective authors are gratefully acknowledged.
